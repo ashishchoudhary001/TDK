@@ -4,4 +4,9 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="share_msg">Share this code and get 300Rs as Promo Balance</string>
+    <string name="str_promo_bal">Promo Balance:</string>
+    <string name="str_wallet_bal">Wallet Balance:</string>
+    <string name="str_total_amount">Total Amount:</string>
+    <string name="str_promo_bal_amount">Promo Balance used:</string>
+    <string name="str_wallet_bal_used">Wallet Balance used:</string>
 </resources>

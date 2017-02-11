@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_bg">
+
+    <TextView
+        android:id="@+id/tv_promo_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/str_promo_bal"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_promo_balance"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/tv_promo_balance"
+        android:background="@color/white" />
+
+    <ImageButton
+        android:id="@+id/iv_promo_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/et_promo_balance"
+        android:background="@drawable/ic_info_outline_white_24dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_alignBaseline="@id/tv_promo_balance"/>
+
+    <TextView
+        android:layout_below="@id/tv_promo_balance"
+        android:id="@+id/tv_wallet_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_alignRight="@id/tv_promo_balance"
+        android:text="@string/str_wallet_bal"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_wallet_balance"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_promo_balance"
+        android:layout_marginLeft="20dp"
+        android:layout_alignBaseline="@id/tv_wallet_balance"
+        android:layout_toRightOf="@id/tv_wallet_balance"
+        android:background="@color/white" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/et_wallet_balance"
+        android:layout_below="@id/tv_promo_balance"
+        android:background="@drawable/ic_info_outline_white_24dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_alignBaseline="@id/tv_wallet_balance"/>
+
+    <TextView
+        android:layout_below="@id/tv_wallet_balance"
+        android:id="@+id/tv_total_amount"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_total_amount"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_below="@id/tv_total_amount"
+        android:id="@+id/tv_promo_balance_used"
+        android:layout_alignRight="@id/tv_total_amount"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_promo_bal_amount"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_below="@id/tv_promo_balance_used"
+        android:id="@+id/tv_wallet_bal_used"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/tv_total_amount"
+        android:text="@string/str_wallet_bal_used"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_alignLeft="@+id/tv_promo_balance_used"
+        android:layout_alignStart="@+id/tv_promo_balance_used" />
+
+    <TextView
+        android:layout_below="@id/tv_wallet_balance"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_total_amount"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/et_total_amount"
+        android:layout_toRightOf="@id/tv_total_amount"
+        android:layout_alignBaseline="@id/tv_total_amount"
+        android:layout_marginLeft="10dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"/>
+
+    <TextView
+        android:id="@+id/et_promo_bal_amount"
+        android:layout_toRightOf="@id/tv_promo_balance_used"
+        android:layout_alignBaseline="@id/tv_promo_balance_used"
+        android:layout_marginLeft="10dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"/>
+
+    <TextView
+        android:id="@+id/et_wallet_bal_amount"
+        android:layout_toRightOf="@id/tv_promo_balance_used"
+        android:layout_alignBaseline="@id/tv_wallet_bal_used"
+        android:layout_marginLeft="10dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_below="@id/tv_wallet_bal_used"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="20dp"
+        android:background="@color/gray"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_below="@id/divider"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_total_amount"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+</RelativeLayout>
