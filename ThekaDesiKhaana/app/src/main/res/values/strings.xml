@@ -9,4 +9,7 @@
     <string name="str_total_amount">Total Amount:</string>
     <string name="str_promo_bal_amount">Promo Balance used:</string>
     <string name="str_wallet_bal_used">Wallet Balance used:</string>
+    <string name="str_payable_amount">Payable Amount:</string>
+    <string name="str_order_summary">Order Summary:</string>
+    <string name="str_payment">Make Payment</string>
 </resources>

@@ -7,4 +7,5 @@
     <color name="black">#000</color>
     <color name="dark_bg">#3E3C3C</color>
     <color name="gray">#fafafa</color>
+    <color name="payment_btn_color">#AEB32B</color>
 </resources>
