@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#AFB42B">
+
+    <ImageView
+        android:id="@+id/share_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_share_white_36dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:id="@+id/tv_referral_code"
+        android:layout_below="@id/share_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="2424FFaa44"
+        android:textSize="20sp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_below="@id/tv_referral_code"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginEnd="2dp"
+        android:background="@color/black" />
+
+    <TextView
+        android:layout_below="@id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/share_msg"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"/>
+
+</RelativeLayout>
