@@ -12,4 +12,7 @@
     <string name="str_payable_amount">Payable Amount:</string>
     <string name="str_order_summary">Order Summary:</string>
     <string name="str_payment">Make Payment</string>
+    <string name="str_confirm_order">Confirm Order</string>
+    <string name="str_your_address">Your Address</string>
+    <string name="str_your_ph_number">Your Phone No</string>
 </resources>

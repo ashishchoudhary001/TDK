@@ -20,10 +20,9 @@ import okhttp3.Response;
 
 import static com.thekadesikhaana.MenuFragment.ARG_MENU;
 
-/**
+/*
  * Created by ashishchoudhary on 05/02/17.
  */
-
 public class WelcomeActivity extends Activity {
 
     Bundle bundle;
@@ -37,7 +36,6 @@ public class WelcomeActivity extends Activity {
     }
 
     private class DownloadMenuTask extends AsyncTask<String,Void,String> {
-
 
         OkHttpClient client;
         Response response = null;
@@ -85,9 +83,6 @@ public class WelcomeActivity extends Activity {
             {
                 e.printStackTrace();
             }
-
-
-
         }
 
         Response run(String url) throws IOException {
