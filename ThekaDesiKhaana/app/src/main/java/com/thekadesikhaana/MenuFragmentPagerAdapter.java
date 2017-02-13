@@ -19,15 +19,13 @@ import model.Punjabi;
  * Created by ashishchoudhary on 05/02/17.
  */
 
-public class MenuFragmentPagerAdapter extends FragmentPagerAdapter {
+class MenuFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = MenuFragmentPagerAdapter.class.getSimpleName();
     private int PAGE_COUNT = -1;
-    //private FoodTypeResponseModel model;
     private List<FoodType> mFoodList;
 
-    public MenuFragmentPagerAdapter(FragmentManager fm, FoodTypeResponseModel model) {
+    MenuFragmentPagerAdapter(FragmentManager fm, FoodTypeResponseModel model) {
         super(fm);
-        //this.model = model;
         PAGE_COUNT = model.getFoodType().size();
         mFoodList = model.getFoodType();
     }
@@ -66,11 +64,6 @@ public class MenuFragmentPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    /*@Override
-    public int getItemPosition(Object object) {
-        return super.getItemPosition(object);
-    }
-*/
     @Override
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position

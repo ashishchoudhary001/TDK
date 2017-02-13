@@ -26,36 +26,20 @@ import model.Punjabi;
  * Created by ashishchoudhary on 05/02/17.
  */
 public class MenuFragment extends Fragment implements MenuViewPagerActivity.DataUpdateListener {
-    public static final String ARG_PAGE = "ARG_PAGE";
+
     public static final String ARG_MENU = "ARG_MENU";
     private static final String TAG = MenuFragment.class.getSimpleName();
 
-    //private int mPage;
-
-    private List<MenuItems> menuItems;
-
-    private static RecyclerView.Adapter adapter;
-
-    private RecyclerView.LayoutManager layoutManager;
-
     private RecyclerView recyclerView;
+    private IFoodType mFoodStyle;
 
-    //private static ArrayList<MenuItems> data;
-
-    MenuViewPagerActivity menuViewPagerActivity;
-    private static IFoodType mFoodStyle;
-    private static MenuFragment INSTANCE;
 
     @Override
     public void onDataUpdate(int index) {
-        //adapter.notifyDataSetChanged();
     }
 
     public static MenuFragment newInstance() {
-        //if (null == INSTANCE) {
-            INSTANCE = new MenuFragment();
-        //}
-        return INSTANCE;
+        return new MenuFragment();
     }
 
     public void setFoodStyle(IFoodType foodStyle) {
@@ -74,43 +58,42 @@ public class MenuFragment extends Fragment implements MenuViewPagerActivity.Data
 
         recyclerView = (RecyclerView) view.findViewById(R.id.menu_recycler_view);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        //data = menuItems.menuItem;
-
-
-        if(mFoodStyle instanceof Bengali) {
-            Log.d(TAG, "FoodStyle Bengali");
-            menuItems = ((Bengali) mFoodStyle).getMenuItems();
-        } else if(mFoodStyle instanceof NorthIndian) {
-            Log.d(TAG, "FoodStyle North Indian");
-            menuItems = ((NorthIndian) mFoodStyle).getMenuItems();
-        } else if(mFoodStyle instanceof Odia) {
-            Log.d(TAG, "FoodStyle Odia");
-            menuItems = ((Odia) mFoodStyle).getMenuItems();
-        } else if(mFoodStyle instanceof Punjabi) {
-            Log.d(TAG, "FoodStyle Punjabi");
-            menuItems = ((Punjabi) mFoodStyle).getMenuItems();
-        }
-
-        adapter = new MenuAdapter(menuItems);
-        recyclerView.setAdapter(adapter);
 
         return view;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "ON-RESUME-MENU-FRAGMENT");
+        if(mFoodStyle instanceof Bengali) {
+            Log.d(TAG, "FoodStyle Bengali");
+            recyclerView.setAdapter(new MenuAdapter(((Bengali) mFoodStyle).getMenuItems()));
+        } else if(mFoodStyle instanceof NorthIndian) {
+            Log.d(TAG, "FoodStyle North Indian");
+            recyclerView.setAdapter(new MenuAdapter(((NorthIndian) mFoodStyle).getMenuItems()));
+        } else if(mFoodStyle instanceof Odia) {
+            Log.d(TAG, "FoodStyle Odia");
+            recyclerView.setAdapter(new MenuAdapter(((Odia) mFoodStyle).getMenuItems()));
+        } else if(mFoodStyle instanceof Punjabi) {
+            Log.d(TAG, "FoodStyle Punjabi");
+            recyclerView.setAdapter(new MenuAdapter(((Punjabi) mFoodStyle).getMenuItems()));
+        } else {
+            Log.d(TAG, "INVALID FOOD STYLE");
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         Log.d(TAG, "ON-ATTACH");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //((MenuViewPagerActivity) getActivity()).unregisterDataUpdateListener(this);
     }
 }

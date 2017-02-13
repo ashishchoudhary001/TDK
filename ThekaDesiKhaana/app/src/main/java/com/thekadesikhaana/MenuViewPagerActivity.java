@@ -60,19 +60,15 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        //Bundle bundle = getIntent().getExtras();
-
-
-
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-
 
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-//                Toast.makeText(getApplicationContext(),"Pos onTabSelected: "+ tabLayout.getSelectedTabPosition(),Toast.LENGTH_SHORT).show();
-                dataUpdated();
+//
+                //dataUpdated();
+                Log.d(TAG, "ON TAB SELECTED");
             }
 
             @Override
@@ -203,8 +199,7 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<FoodTypeResponseModel> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
+                Toast.makeText(MenuViewPagerActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
             }
         });
     }

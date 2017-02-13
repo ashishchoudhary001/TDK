@@ -15,4 +15,6 @@
     <string name="str_confirm_order">Confirm Order</string>
     <string name="str_your_address">Your Address</string>
     <string name="str_your_ph_number">Your Phone No</string>
+    <string name="str_remove">Remove</string>
+    <string name="str_add">Add</string>
 </resources>

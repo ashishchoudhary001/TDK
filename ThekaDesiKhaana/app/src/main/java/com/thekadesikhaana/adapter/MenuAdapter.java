@@ -41,7 +41,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     public MenuAdapter(List<MenuItems> data) {
         this.dataSet = data;
         Log.d(TAG, "MENU ADAPTER CONSTRUCTOR :"+data);
-        //notifyDataSetChanged();
     }
 
 
@@ -64,14 +63,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         menuContent.setText(dataSet.get(listPosition).getItems());
 
         int menuTypeImage;
-        /*if (dataSet.get(listPosition).getMenuType() == true) {
-            menuTypeImage = R.drawable.app_icon;
-        } else {
-            menuTypeImage = R.drawable.drawer_icon;
-        }*/
-        menuTypeImage = R.drawable.app_icon;
 
-        menuType.setImageResource(menuTypeImage);
         Log.d(TAG, "IMAGE URL:" + dataSet.get(listPosition).getUrlMobile());
 
         //menuImage.setImageBitmap(dataSet.get(listPosition).getUrlMobile());
