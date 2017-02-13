@@ -1,13 +1,16 @@
 package com.thekadesikhaana.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.thekadesikhaana.R;
 
 import java.util.List;
@@ -17,30 +20,36 @@ import model.MenuItems;
 /**
  * Created by ashishchoudhary on 05/02/17.
  */
-
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> {
 
 
     private static final String TAG = MenuAdapter.class.getSimpleName();
     private List<MenuItems> dataSet;
+    private Context mContext;
+
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView menuContent;
         ImageView menuType;
         ImageView menuImage;
+        TextView menuPrice;
+        Button addItemButton;
+        int counter = 1;
 
         MyViewHolder(View itemView) {
             super(itemView);
-            this.menuContent = (TextView) itemView.findViewById(R.id.menu_content);
-            this.menuType = (ImageView) itemView.findViewById(R.id.menu_type);
-            this.menuImage = (ImageView) itemView.findViewById(R.id.imageView);
+            menuContent = (TextView) itemView.findViewById(R.id.menu_content);
+            menuType = (ImageView) itemView.findViewById(R.id.menu_type);
+            menuImage = (ImageView) itemView.findViewById(R.id.main_image);
+            menuPrice = (TextView) itemView.findViewById(R.id.tv_price);
+            addItemButton = (Button) itemView.findViewById(R.id.btn_add);
         }
     }
 
-    public MenuAdapter(List<MenuItems> data) {
+    public MenuAdapter(Context context, List<MenuItems> data) {
         this.dataSet = data;
-        Log.d(TAG, "MENU ADAPTER CONSTRUCTOR :"+data);
+        mContext = context;
     }
 
 
@@ -49,7 +58,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
                                            int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.menu_card, parent, false);
-        Log.d(TAG, "ON CREATE VIEW HOLDER");
         return new MyViewHolder(view);
     }
 
@@ -59,14 +67,29 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         TextView menuContent = holder.menuContent;
         ImageView menuType = holder.menuType;
         ImageView menuImage = holder.menuImage;
+        final TextView priceTextView = holder.menuPrice;
+        Button addItemButton = holder.addItemButton;
 
-        menuContent.setText(dataSet.get(listPosition).getItems());
+        final MenuItems menuItems = dataSet.get(listPosition);
+        Picasso.with(mContext).
+                load(menuItems.getUrlMobile())
+        .placeholder(R.drawable.app_icon)
+        .into(menuImage);
 
-        int menuTypeImage;
+        menuContent.setText(menuItems.getItems());
+        String price = getPrice(Integer.parseInt(menuItems.getPrice()), (holder.counter++));
+        priceTextView.setText(price);
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String price = getPrice(Integer.parseInt(menuItems.getPrice()), (holder.counter++));
+                priceTextView.setText(price);
+            }
+        });
+    }
 
-        Log.d(TAG, "IMAGE URL:" + dataSet.get(listPosition).getUrlMobile());
-
-        //menuImage.setImageBitmap(dataSet.get(listPosition).getUrlMobile());
+    private String getPrice(int price, int counter) {
+        return (price * (counter)) + " Rs.";
     }
 
     @Override

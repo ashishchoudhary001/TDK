@@ -1,5 +1,6 @@
 package com.thekadesikhaana;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,8 @@ public class MenuFragment extends Fragment implements MenuViewPagerActivity.Data
 
     private RecyclerView recyclerView;
     private IFoodType mFoodStyle;
+
+    private Context mContext;
 
 
     @Override
@@ -71,16 +74,16 @@ public class MenuFragment extends Fragment implements MenuViewPagerActivity.Data
         Log.d(TAG, "ON-RESUME-MENU-FRAGMENT");
         if(mFoodStyle instanceof Bengali) {
             Log.d(TAG, "FoodStyle Bengali");
-            recyclerView.setAdapter(new MenuAdapter(((Bengali) mFoodStyle).getMenuItems()));
+            recyclerView.setAdapter(new MenuAdapter(mContext, ((Bengali) mFoodStyle).getMenuItems()));
         } else if(mFoodStyle instanceof NorthIndian) {
             Log.d(TAG, "FoodStyle North Indian");
-            recyclerView.setAdapter(new MenuAdapter(((NorthIndian) mFoodStyle).getMenuItems()));
+            recyclerView.setAdapter(new MenuAdapter(mContext, ((NorthIndian) mFoodStyle).getMenuItems()));
         } else if(mFoodStyle instanceof Odia) {
             Log.d(TAG, "FoodStyle Odia");
-            recyclerView.setAdapter(new MenuAdapter(((Odia) mFoodStyle).getMenuItems()));
+            recyclerView.setAdapter(new MenuAdapter(mContext, ((Odia) mFoodStyle).getMenuItems()));
         } else if(mFoodStyle instanceof Punjabi) {
             Log.d(TAG, "FoodStyle Punjabi");
-            recyclerView.setAdapter(new MenuAdapter(((Punjabi) mFoodStyle).getMenuItems()));
+            recyclerView.setAdapter(new MenuAdapter(mContext, ((Punjabi) mFoodStyle).getMenuItems()));
         } else {
             Log.d(TAG, "INVALID FOOD STYLE");
         }
@@ -89,7 +92,14 @@ public class MenuFragment extends Fragment implements MenuViewPagerActivity.Data
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         Log.d(TAG, "ON-ATTACH");
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = activity;
     }
 
     @Override
