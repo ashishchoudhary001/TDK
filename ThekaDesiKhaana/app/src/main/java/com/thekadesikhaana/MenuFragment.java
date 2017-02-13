@@ -6,88 +6,65 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.thekadesikhaana.adapter.MenuAdapter;
+
+import java.util.List;
+
+import model.Bengali;
+import model.IFoodType;
+import model.MenuItems;
+import model.NorthIndian;
+import model.Odia;
+import model.Punjabi;
 
 /**
  * Created by ashishchoudhary on 05/02/17.
  */
-
 public class MenuFragment extends Fragment implements MenuViewPagerActivity.DataUpdateListener {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String ARG_MENU = "ARG_MENU";
+    private static final String TAG = MenuFragment.class.getSimpleName();
 
-    private int mPage;
+    //private int mPage;
 
-    private MenuParcelable menuItems;
+    private List<MenuItems> menuItems;
 
     private static RecyclerView.Adapter adapter;
 
     private RecyclerView.LayoutManager layoutManager;
 
-    private static RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
-    private static ArrayList<MenuItemModel> data;
+    //private static ArrayList<MenuItems> data;
 
     MenuViewPagerActivity menuViewPagerActivity;
+    private static IFoodType mFoodStyle;
+    private static MenuFragment INSTANCE;
 
     @Override
     public void onDataUpdate(int index) {
-//        adapter.notifyDataSetChanged();
-//        Toast.makeText(getActivity(),""+index,Toast.LENGTH_SHORT).show();
-
-//        for(int i = 0; i < data.size(); i++)
-//        {
-//            if(index == 0)
-//            {
-//                if(data.get(i).getId() > 4)
-//                {
-//                    data.remove(i);
-//                }
-//            }
-//
-//            if(index == 1)
-//            {
-//                if(data.get(i).getId() > 7)
-//                {
-//                    data.remove(i);
-//                }else if(data.get(i).getId()<=4)
-//                {
-//                    data.remove(i);
-//                }
-//            }
-//
-//            if(index == 2)
-//            {
-//                if(data.get(i).getId()<=7)
-//                {
-//                    data.remove(i);
-//                }
-//            }
-//
-//
-//
-//        }
-
-        adapter.notifyDataSetChanged();
-
-
+        //adapter.notifyDataSetChanged();
     }
 
-    public static MenuFragment newInstance(Bundle bundle) {
-        MenuFragment fragment = new MenuFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+    public static MenuFragment newInstance() {
+        //if (null == INSTANCE) {
+            INSTANCE = new MenuFragment();
+        //}
+        return INSTANCE;
+    }
+
+    public void setFoodStyle(IFoodType foodStyle) {
+        mFoodStyle = foodStyle;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
-        menuItems = getArguments().getParcelable(ARG_MENU);
     }
 
     @Override
@@ -101,14 +78,26 @@ public class MenuFragment extends Fragment implements MenuViewPagerActivity.Data
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        data = menuItems.menuItem;
+        //data = menuItems.menuItem;
 
-//        Toast.makeText(getActivity(),""+mPage,Toast.LENGTH_SHORT).show();
 
-        adapter = new MenuAdapter(data);
+        if(mFoodStyle instanceof Bengali) {
+            Log.d(TAG, "FoodStyle Bengali");
+            menuItems = ((Bengali) mFoodStyle).getMenuItems();
+        } else if(mFoodStyle instanceof NorthIndian) {
+            Log.d(TAG, "FoodStyle North Indian");
+            menuItems = ((NorthIndian) mFoodStyle).getMenuItems();
+        } else if(mFoodStyle instanceof Odia) {
+            Log.d(TAG, "FoodStyle Odia");
+            menuItems = ((Odia) mFoodStyle).getMenuItems();
+        } else if(mFoodStyle instanceof Punjabi) {
+            Log.d(TAG, "FoodStyle Punjabi");
+            menuItems = ((Punjabi) mFoodStyle).getMenuItems();
+        }
+
+        adapter = new MenuAdapter(menuItems);
         recyclerView.setAdapter(adapter);
 
-        menuViewPagerActivity.dataUpdated();
         return view;
     }
 
@@ -116,17 +105,12 @@ public class MenuFragment extends Fragment implements MenuViewPagerActivity.Data
     public void onAttach(Context context) {
         super.onAttach(context);
 
-
-
-        if(context instanceof MenuViewPagerActivity){
-            menuViewPagerActivity = (MenuViewPagerActivity)context;
-            menuViewPagerActivity.registerDataUpdateListener(this);
-        }
+        Log.d(TAG, "ON-ATTACH");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((MenuViewPagerActivity) getActivity()).unregisterDataUpdateListener(this);
+        //((MenuViewPagerActivity) getActivity()).unregisterDataUpdateListener(this);
     }
 }

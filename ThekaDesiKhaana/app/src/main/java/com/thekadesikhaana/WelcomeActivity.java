@@ -26,6 +26,7 @@ import static com.thekadesikhaana.MenuFragment.ARG_MENU;
 public class WelcomeActivity extends Activity {
 
     Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +36,7 @@ public class WelcomeActivity extends Activity {
         downloadMenuTask.execute();
     }
 
-    private class DownloadMenuTask extends AsyncTask<String,Void,String> {
+    private class DownloadMenuTask extends AsyncTask<String, Void, String> {
 
         OkHttpClient client;
         Response response = null;
@@ -43,11 +44,10 @@ public class WelcomeActivity extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                client  = new OkHttpClient();
+                client = new OkHttpClient();
                 response = run("http://107.23.59.43:8787/thekadesi/menu/today");
                 return response.body().string();
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -70,8 +70,8 @@ public class WelcomeActivity extends Activity {
 
                 JSONArray bengaliMenuItems = (JSONArray) bengaliJson.get("menuItems");
 
-                for(int i=0; i<bengaliMenuItems.length(); i++){
-                    JSONObject jsonObj  = bengaliMenuItems.getJSONObject(i);
+                for (int i = 0; i < bengaliMenuItems.length(); i++) {
+                    JSONObject jsonObj = bengaliMenuItems.getJSONObject(i);
                     System.out.println(jsonObj.getString("items"));
                     System.out.println(jsonObj.getString("urlMobile"));
 
@@ -79,8 +79,7 @@ public class WelcomeActivity extends Activity {
                     menuImageTask.execute(jsonObj.getString("urlMobile"));
                 }
 
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -93,8 +92,7 @@ public class WelcomeActivity extends Activity {
             try {
                 response = client.newCall(request).execute();
                 return response;
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
@@ -102,8 +100,7 @@ public class WelcomeActivity extends Activity {
     }
 
 
-
-    private class DownloadMenuImageTask extends AsyncTask<String,Void,Bitmap> {
+    private class DownloadMenuImageTask extends AsyncTask<String, Void, Bitmap> {
 
 
         OkHttpClient client;
@@ -112,10 +109,9 @@ public class WelcomeActivity extends Activity {
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                client  = new OkHttpClient();
+                client = new OkHttpClient();
                 return run(params[0]);
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -136,14 +132,13 @@ public class WelcomeActivity extends Activity {
                     data.add(new MenuItemModel("rice, chapati, daal, gulab jamun, curd, salad, juice, mutton, biryani, chai", false, i, MenuItemModel.convert(BitmapFactory.decodeResource(getResources(),
                             R.drawable.food_one))));
                 }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
 
             bundle = new Bundle();
-            bundle.putParcelable(ARG_MENU,menuParcelable);
+            bundle.putParcelable(ARG_MENU, menuParcelable);
 
             Intent intent = new Intent(getApplicationContext(), MenuViewPagerActivity.class);
             intent.putExtras(bundle);
@@ -170,8 +165,7 @@ public class WelcomeActivity extends Activity {
                     }
                 }
                 return bitmap;
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }

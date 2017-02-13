@@ -1,30 +1,36 @@
-package com.thekadesikhaana;
+package com.thekadesikhaana.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.thekadesikhaana.R;
+
+import java.util.List;
+
+import model.MenuItems;
 
 /**
  * Created by ashishchoudhary on 05/02/17.
  */
 
-public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>  {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> {
 
 
-    private ArrayList<MenuItemModel> dataSet;
+    private static final String TAG = MenuAdapter.class.getSimpleName();
+    private List<MenuItems> dataSet;
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView menuContent;
         ImageView menuType;
         ImageView menuImage;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             this.menuContent = (TextView) itemView.findViewById(R.id.menu_content);
             this.menuType = (ImageView) itemView.findViewById(R.id.menu_type);
@@ -32,8 +38,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         }
     }
 
-    public MenuAdapter(ArrayList<MenuItemModel> data) {
+    public MenuAdapter(List<MenuItems> data) {
         this.dataSet = data;
+        Log.d(TAG, "MENU ADAPTER CONSTRUCTOR :"+data);
+        //notifyDataSetChanged();
     }
 
 
@@ -42,9 +50,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
                                            int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.menu_card, parent, false);
-
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        return myViewHolder;
+        Log.d(TAG, "ON CREATE VIEW HOLDER");
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -54,21 +61,20 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         ImageView menuType = holder.menuType;
         ImageView menuImage = holder.menuImage;
 
-        menuContent.setText(dataSet.get(listPosition).getMenuContent());
+        menuContent.setText(dataSet.get(listPosition).getItems());
 
-        int menuTypeImage = 0;
-        if(dataSet.get(listPosition).getMenuType()== true)
-        {
+        int menuTypeImage;
+        /*if (dataSet.get(listPosition).getMenuType() == true) {
             menuTypeImage = R.drawable.app_icon;
-        }
-        else
-        {
+        } else {
             menuTypeImage = R.drawable.drawer_icon;
-        }
+        }*/
+        menuTypeImage = R.drawable.app_icon;
 
         menuType.setImageResource(menuTypeImage);
+        Log.d(TAG, "IMAGE URL:" + dataSet.get(listPosition).getUrlMobile());
 
-        menuImage.setImageBitmap(dataSet.get(listPosition).getImage());
+        //menuImage.setImageBitmap(dataSet.get(listPosition).getUrlMobile());
     }
 
     @Override

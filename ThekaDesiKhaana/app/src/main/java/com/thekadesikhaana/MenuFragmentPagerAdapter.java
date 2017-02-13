@@ -4,19 +4,32 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+
+import java.util.List;
+
+import model.Bengali;
+import model.FoodType;
+import model.FoodTypeResponseModel;
+import model.NorthIndian;
+import model.Odia;
+import model.Punjabi;
 
 /**
  * Created by ashishchoudhary on 05/02/17.
  */
 
 public class MenuFragmentPagerAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "NorthIndian", "Bengali", "Odia" };
-    private Bundle bundle;
+    private static final String TAG = MenuFragmentPagerAdapter.class.getSimpleName();
+    private int PAGE_COUNT = -1;
+    //private FoodTypeResponseModel model;
+    private List<FoodType> mFoodList;
 
-    public MenuFragmentPagerAdapter(FragmentManager fm, Bundle bundle) {
+    public MenuFragmentPagerAdapter(FragmentManager fm, FoodTypeResponseModel model) {
         super(fm);
-        this.bundle = bundle;
+        //this.model = model;
+        PAGE_COUNT = model.getFoodType().size();
+        mFoodList = model.getFoodType();
     }
 
     @Override
@@ -25,27 +38,54 @@ public class MenuFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
-//        bundle.putInt(ARG_PAGE,position + 1);
-        return MenuFragment.newInstance(bundle);
+    public Fragment getItem(final int position) {
+        switch (position) {
+            case 0:
+                Bengali bengaliFood = mFoodList.get(position).getBengali();
+                MenuFragment fragment = MenuFragment.newInstance();
+                fragment.setFoodStyle(bengaliFood);
+                return fragment;
+            case 1:
+                NorthIndian northIndian = mFoodList.get(position).getNorthIndian();
+                MenuFragment northIndiaFrag = MenuFragment.newInstance();
+                northIndiaFrag.setFoodStyle(northIndian);
+                return northIndiaFrag;
+            case 2:
+                Odia odia = mFoodList.get(position).getOdia();
+                MenuFragment odiaFrag = MenuFragment.newInstance();
+                odiaFrag.setFoodStyle(odia);
+                return odiaFrag;
+            case 3:
+                Punjabi punjabi = mFoodList.get(position).getPunjabi();
+                MenuFragment punjabiFrag = MenuFragment.newInstance();
+                punjabiFrag.setFoodStyle(punjabi);
+                return punjabiFrag;
+            default:
+                Log.d(TAG, "WRONG CHOICE");
+                return null;
+        }
     }
 
-    @Override
+    /*@Override
     public int getItemPosition(Object object) {
-        if(object instanceof MenuFragmentPagerAdapter) {
-
-        }
         return super.getItemPosition(object);
     }
-
+*/
     @Override
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
-        return tabTitles[position];
+        switch (position) {
+            case 0:
+                return mFoodList.get(position).getBengali().getName();
+            case 1:
+                return /*mFoodList.get(position).getNorthIndian().getName();*/"NORTH";
+            case 2:
+                return mFoodList.get(position).getOdia().getName();
+            case 3:
+                return mFoodList.get(position).getPunjabi().getName();
+            default:
+                return "";
+        }
     }
 
-    public Bundle getBundle()
-    {
-        return bundle;
-    }
 }

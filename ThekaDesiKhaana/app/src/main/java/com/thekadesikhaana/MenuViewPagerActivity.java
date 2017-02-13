@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -19,9 +20,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import api.APIClient;
+import api.APIInterface;
+import model.FoodTypeResponseModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MenuViewPagerActivity extends AppCompatActivity {
 
-    HashMap<String,Integer> cart = new HashMap<>();
+    private static final String TAG = MenuViewPagerActivity.class.getSimpleName();
+    HashMap<String, Integer> cart = new HashMap<>();
 
     private ViewPager viewPager;
 
@@ -44,21 +53,20 @@ public class MenuViewPagerActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         initNavigationDrawer();
 
+        //API CALL
+        fetchFoodItemList();
+
         mListeners = new ArrayList<>();
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        Bundle bundle = getIntent().getExtras();
+        //Bundle bundle = getIntent().getExtras();
 
 
-        pagerAdapter = new MenuFragmentPagerAdapter(getSupportFragmentManager(),bundle);
-
-        viewPager.setAdapter(pagerAdapter);
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.setupWithViewPager(viewPager);
+
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -76,10 +84,10 @@ public class MenuViewPagerActivity extends AppCompatActivity {
             }
         });
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close){
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
             @Override
-            public void onDrawerClosed(View v){
+            public void onDrawerClosed(View v) {
                 super.onDrawerClosed(v);
             }
 
@@ -115,36 +123,34 @@ public class MenuViewPagerActivity extends AppCompatActivity {
     }
 
 
-
-
     public void initNavigationDrawer() {
 
-        NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                 int id = menuItem.getItemId();
 
-                switch (id){
+                switch (id) {
                     case R.id.nav_orders:
-                        Toast.makeText(getApplicationContext(),"My Orders",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "My Orders", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_account:
-                        Toast.makeText(getApplicationContext(),"My Account",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "My Account", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_invite:
-                        Toast.makeText(getApplicationContext(),"Invite n Earn",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Invite n Earn", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_feedback:
-                        Toast.makeText(getApplicationContext(),"Feedback",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Feedback", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_faqs:
-                        Toast.makeText(getApplicationContext(),"FAQs",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "FAQs", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_logout:
@@ -156,16 +162,16 @@ public class MenuViewPagerActivity extends AppCompatActivity {
             }
         });
         View header = navigationView.getHeaderView(0);
-        TextView tv_email = (TextView)header.findViewById(R.id.tv_email);
+        TextView tv_email = (TextView) header.findViewById(R.id.tv_email);
         tv_email.setText("ankit.nitks@gmail.com");
 
 
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close){
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
             @Override
-            public void onDrawerClosed(View v){
+            public void onDrawerClosed(View v) {
                 super.onDrawerClosed(v);
             }
 
@@ -180,6 +186,33 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
     public interface DataUpdateListener {
         void onDataUpdate(int index);
+    }
+
+
+    private void fetchFoodItemList() {
+        APIInterface apiService =
+                APIClient.getClient().create(APIInterface.class);
+
+        Call<FoodTypeResponseModel> call = apiService.getMenuList();
+        call.enqueue(new Callback<FoodTypeResponseModel>() {
+            @Override
+            public void onResponse(Call<FoodTypeResponseModel> call, Response<FoodTypeResponseModel> response) {
+                Log.d(TAG, "" + response.body());
+                buildPage(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<FoodTypeResponseModel> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    private void buildPage(FoodTypeResponseModel responseModel) {
+        pagerAdapter = new MenuFragmentPagerAdapter(getSupportFragmentManager(), responseModel);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setAdapter(pagerAdapter);
     }
 
 }
