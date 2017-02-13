@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.thekadesikhaana.R;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import model.MenuItems;
 
@@ -35,7 +36,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         ImageView menuImage;
         TextView menuPrice;
         Button addItemButton;
+        Button removeItemButton;
         int counter = 1;
+        int totalPrice = 1;
 
         MyViewHolder(View itemView) {
             super(itemView);
@@ -44,6 +47,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
             menuImage = (ImageView) itemView.findViewById(R.id.main_image);
             menuPrice = (TextView) itemView.findViewById(R.id.tv_price);
             addItemButton = (Button) itemView.findViewById(R.id.btn_add);
+            removeItemButton = (Button) itemView.findViewById(R.id.btn_remove);
         }
     }
 
@@ -69,27 +73,44 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         ImageView menuImage = holder.menuImage;
         final TextView priceTextView = holder.menuPrice;
         Button addItemButton = holder.addItemButton;
+        Button removeItemButton = holder.removeItemButton;
 
         final MenuItems menuItems = dataSet.get(listPosition);
         Picasso.with(mContext).
                 load(menuItems.getUrlMobile())
-        .placeholder(R.drawable.app_icon)
-        .into(menuImage);
+                .placeholder(R.drawable.app_icon)
+                .into(menuImage);
 
         menuContent.setText(menuItems.getItems());
-        String price = getPrice(Integer.parseInt(menuItems.getPrice()), (holder.counter++));
+        String price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
         priceTextView.setText(price);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String price = getPrice(Integer.parseInt(menuItems.getPrice()), (holder.counter++));
+                String price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
+                priceTextView.setText(price);
+            }
+        });
+
+        removeItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, false);
                 priceTextView.setText(price);
             }
         });
     }
 
-    private String getPrice(int price, int counter) {
-        return (price * (counter)) + " Rs.";
+    private String getPrice(int price, MyViewHolder holder, boolean isAdd) {
+
+        if (isAdd) {
+            holder.totalPrice = (price * (holder.counter++));
+        } else {
+            int counter = (--holder.counter);
+            holder.totalPrice = (price * (--counter));
+        }
+
+        return holder.totalPrice + " Rs.";
     }
 
     @Override
