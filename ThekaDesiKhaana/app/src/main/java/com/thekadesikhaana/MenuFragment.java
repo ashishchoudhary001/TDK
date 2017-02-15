@@ -26,20 +26,14 @@ import model.Punjabi;
 /**
  * Created by ashishchoudhary on 05/02/17.
  */
-public class MenuFragment extends Fragment implements MenuViewPagerActivity.DataUpdateListener {
+public class MenuFragment extends Fragment {
 
     public static final String ARG_MENU = "ARG_MENU";
     private static final String TAG = MenuFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
     private IFoodType mFoodStyle;
-
     private Context mContext;
-
-
-    @Override
-    public void onDataUpdate(int index) {
-    }
 
     public static MenuFragment newInstance() {
         return new MenuFragment();

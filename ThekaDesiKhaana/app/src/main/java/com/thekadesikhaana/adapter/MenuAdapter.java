@@ -2,8 +2,8 @@ package com.thekadesikhaana.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,12 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.thekadesikhaana.MenuFragment;
 import com.thekadesikhaana.R;
 
 import java.util.List;
-import java.util.StringTokenizer;
 
 import model.MenuItems;
+import model.OrderModel;
 
 /**
  * Created by ashishchoudhary on 05/02/17.
@@ -28,7 +29,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     private List<MenuItems> dataSet;
     private Context mContext;
 
-
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView menuContent;
@@ -39,6 +39,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         Button removeItemButton;
         int counter = 1;
         int totalPrice = 1;
+        int selectedItem = 0;
 
         MyViewHolder(View itemView) {
             super(itemView);
@@ -56,7 +57,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         mContext = context;
     }
 
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent,
                                            int viewType) {
@@ -73,35 +73,64 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         ImageView menuImage = holder.menuImage;
         final TextView priceTextView = holder.menuPrice;
         Button addItemButton = holder.addItemButton;
-        Button removeItemButton = holder.removeItemButton;
+        final Button removeItemButton = holder.removeItemButton;
 
         final MenuItems menuItems = dataSet.get(listPosition);
+
         Picasso.with(mContext).
                 load(menuItems.getUrlMobile())
                 .placeholder(R.drawable.app_icon)
+                .resize(900, 900)
                 .into(menuImage);
 
+        if(menuItems.getCuisine().getType().equalsIgnoreCase("v")) {
+            menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.vegicon));
+        } else {
+            menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nonveg_icon));
+        }
         menuContent.setText(menuItems.getItems());
-        String price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
-        priceTextView.setText(price);
+        int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
+        String str = price +" Rs";
+        priceTextView.setText(str);
+
+        if(holder.selectedItem > 1) {
+            removeItemButton.setVisibility(View.VISIBLE);
+        }
+
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
-                priceTextView.setText(price);
+                int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
+                String str = price +" Rs";
+                priceTextView.setText(str);
+                holder.selectedItem = holder.selectedItem + 1;
+                if(holder.selectedItem >= 1) {
+                    removeItemButton.setVisibility(View.VISIBLE);
+                }
+
+                OrderModel.getInstance().getMenuItems().add(menuItems);
             }
         });
 
         removeItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, false);
-                priceTextView.setText(price);
+                int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, false);
+
+                String str = price +" Rs";
+                priceTextView.setText(str);
+
+                holder.selectedItem -= 1;
+                if(holder.selectedItem < 1) {
+                    removeItemButton.setVisibility(View.INVISIBLE);
+                }
+
+                OrderModel.getInstance().getMenuItems().remove(menuItems);
             }
         });
     }
 
-    private String getPrice(int price, MyViewHolder holder, boolean isAdd) {
+    private int getPrice(int price, MyViewHolder holder, boolean isAdd) {
 
         if (isAdd) {
             holder.totalPrice = (price * (holder.counter++));
@@ -110,7 +139,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
             holder.totalPrice = (price * (--counter));
         }
 
-        return holder.totalPrice + " Rs.";
+        return holder.totalPrice;
     }
 
     @Override

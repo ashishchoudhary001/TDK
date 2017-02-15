@@ -18,7 +18,6 @@ import model.Punjabi;
 /**
  * Created by ashishchoudhary on 05/02/17.
  */
-
 class MenuFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = MenuFragmentPagerAdapter.class.getSimpleName();
     private int PAGE_COUNT = -1;

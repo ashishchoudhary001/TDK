@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +25,10 @@ import java.util.List;
 
 import api.APIClient;
 import api.APIInterface;
+import model.FoodType;
 import model.FoodTypeResponseModel;
+import model.OrderModel;
+import model.UserProfileModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,11 +44,14 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
-    private MenuFragmentPagerAdapter pagerAdapter;
-
-    private List<DataUpdateListener> mListeners;
-
     private TabLayout tabLayout;
+    private List<FoodType> mFoodList;
+
+    private TextView tvUserName;
+    private TextView tvUserEmailID;
+    private UserProfileModel mUserProfile;
+
+    private RelativeLayout mViewPagerContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,73 +64,57 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
         //API CALL
         fetchFoodItemList();
+        fetchUserProfile();
 
-        mListeners = new ArrayList<>();
+        mViewPagerContainer = (RelativeLayout) findViewById(R.id.tabContainer);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
 
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-//
-                //dataUpdated();
-                Log.d(TAG, "ON TAB SELECTED");
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public void onPageSelected(int position) {
+                FoodType foodType = mFoodList.get(position);
+                Log.d(TAG, "FOOD TYPE:" + foodType);
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-
-            @Override
-            public void onDrawerClosed(View v) {
-                super.onDrawerClosed(v);
-            }
-
-            @Override
-            public void onDrawerOpened(View v) {
-                super.onDrawerOpened(v);
-            }
-        };
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Used to add item to Cart", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                //paymentInterface.makePayment(100);
+                //Log.d(TAG, "ORDER:"+ OrderModel.getInstance().getMenuItems());
+
+                if (OrderModel.getInstance().getMenuItems().size() > 0) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    PaymentFragment paymentFragment = new PaymentFragment();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.add(R.id.container, paymentFragment, paymentFragment.getTag()).addToBackStack(null).commit();
+                } else {
+                    Snackbar.make(view, "Used to add item to Cart", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
-
     }
-
-    public synchronized void registerDataUpdateListener(DataUpdateListener listener) {
-        mListeners.add(listener);
-    }
-
-    public synchronized void unregisterDataUpdateListener(DataUpdateListener listener) {
-        mListeners.remove(listener);
-    }
-
-    public synchronized void dataUpdated() {
-        for (DataUpdateListener listener : mListeners) {
-            listener.onDataUpdate(tabLayout.getSelectedTabPosition());
-        }
-    }
-
 
     public void initNavigationDrawer() {
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -158,8 +151,8 @@ public class MenuViewPagerActivity extends AppCompatActivity {
             }
         });
         View header = navigationView.getHeaderView(0);
-        TextView tv_email = (TextView) header.findViewById(R.id.tv_email);
-        tv_email.setText("ankit.nitks@gmail.com");
+        tvUserName = (TextView) header.findViewById(R.id.tv_username);
+        tvUserEmailID = (TextView) header.findViewById(R.id.tv_email_id);
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
@@ -178,10 +171,6 @@ public class MenuViewPagerActivity extends AppCompatActivity {
         };
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-    }
-
-    public interface DataUpdateListener {
-        void onDataUpdate(int index);
     }
 
 
@@ -204,8 +193,34 @@ public class MenuViewPagerActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchUserProfile() {
+        APIInterface apiService =
+                APIClient.getClient().create(APIInterface.class);
+
+        Call<UserProfileModel> call = apiService.getUserProfile();
+        call.enqueue(new Callback<UserProfileModel>() {
+            @Override
+            public void onResponse(Call<UserProfileModel> call, Response<UserProfileModel> response) {
+                Log.d(TAG, "onResponse:" + response.body());
+                updateUserProfile(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<UserProfileModel> call, Throwable t) {
+                Toast.makeText(MenuViewPagerActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateUserProfile(UserProfileModel body) {
+        mUserProfile = body;
+        tvUserEmailID.setText(mUserProfile.getEmail());
+        tvUserName.setText(mUserProfile.getName());
+    }
+
     private void buildPage(FoodTypeResponseModel responseModel) {
-        pagerAdapter = new MenuFragmentPagerAdapter(getSupportFragmentManager(), responseModel);
+        MenuFragmentPagerAdapter pagerAdapter = new MenuFragmentPagerAdapter(getSupportFragmentManager(), responseModel);
+        mFoodList = responseModel.getFoodType();
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(pagerAdapter);
     }
