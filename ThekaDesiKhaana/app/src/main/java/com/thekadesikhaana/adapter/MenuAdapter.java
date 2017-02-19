@@ -1,13 +1,17 @@
 package com.thekadesikhaana.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -37,8 +41,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         TextView menuPrice;
         Button addItemButton;
         Button removeItemButton;
-        int counter = 1;
-        int totalPrice = 1;
+        RelativeLayout itemCountLayout;
+        TextView itemCountTV;
+
+        int totalPrice = 0;
         int selectedItem = 0;
 
         MyViewHolder(View itemView) {
@@ -49,6 +55,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
             menuPrice = (TextView) itemView.findViewById(R.id.tv_price);
             addItemButton = (Button) itemView.findViewById(R.id.btn_add);
             removeItemButton = (Button) itemView.findViewById(R.id.btn_remove);
+            itemCountLayout = (RelativeLayout) itemView.findViewById(R.id.item_count_layout);
+            itemCountTV = (TextView) itemView.findViewById(R.id.item_count_tv);
         }
     }
 
@@ -89,8 +97,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
             menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nonveg_icon));
         }
         menuContent.setText(menuItems.getItems());
-        int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
-        String str = price +" Rs";
+        //int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
+        String str = "₹ " + Integer.parseInt(menuItems.getPrice());
         priceTextView.setText(str);
 
         if(holder.selectedItem > 1) {
@@ -100,14 +108,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
-                String str = price +" Rs";
-                priceTextView.setText(str);
+                holder.itemCountLayout.setVisibility(View.VISIBLE);
                 holder.selectedItem = holder.selectedItem + 1;
-                if(holder.selectedItem >= 1) {
-                    removeItemButton.setVisibility(View.VISIBLE);
-                }
-
+                Log.d(TAG, "Add item: "+holder.selectedItem);
+                holder.itemCountTV.setText(String.valueOf(holder.selectedItem));
+                removeItemButton.setVisibility(View.VISIBLE);
                 OrderModel.getInstance().getMenuItems().add(menuItems);
             }
         });
@@ -115,31 +120,17 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         removeItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, false);
-
-                String str = price +" Rs";
-                priceTextView.setText(str);
-
-                holder.selectedItem -= 1;
+                holder.selectedItem = holder.selectedItem - 1;
+                Log.d(TAG, "Remove item: "+holder.selectedItem);
+                holder.itemCountTV.setText(String.valueOf(holder.selectedItem));
                 if(holder.selectedItem < 1) {
-                    removeItemButton.setVisibility(View.INVISIBLE);
+                    holder.itemCountLayout.setVisibility(View.INVISIBLE);
+                    removeItemButton.setVisibility(View.GONE);
                 }
 
                 OrderModel.getInstance().getMenuItems().remove(menuItems);
             }
         });
-    }
-
-    private int getPrice(int price, MyViewHolder holder, boolean isAdd) {
-
-        if (isAdd) {
-            holder.totalPrice = (price * (holder.counter++));
-        } else {
-            int counter = (--holder.counter);
-            holder.totalPrice = (price * (--counter));
-        }
-
-        return holder.totalPrice;
     }
 
     @Override

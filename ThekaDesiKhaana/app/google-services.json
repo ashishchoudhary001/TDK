@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "213130822688",
+    "project_id": "theka-desi-khana"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213130822688:android:9b89aab277a30a64",
+        "android_client_info": {
+          "package_name": "com.thekadesikhaana"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213130822688-jsl7qpgs5r00u61uji9jka9igsvgs3no.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thekadesikhaana",
+            "certificate_hash": "E72D74EC85104340944278428947AF001CD0DB63"
+          }
+        },
+        {
+          "client_id": "213130822688-eldmgiseaakjk90blf325jarsfoul4f0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYPPvx1_g0kJ_M02np1tvWTdFpaDE1oF4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

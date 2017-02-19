@@ -1,5 +1,6 @@
 package com.thekadesikhaana;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.thekadesikhaana.adapter.CheckOutActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +67,6 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
         //API CALL
         fetchFoodItemList();
-        fetchUserProfile();
 
         mViewPagerContainer = (RelativeLayout) findViewById(R.id.tabContainer);
 
@@ -99,16 +101,25 @@ public class MenuViewPagerActivity extends AppCompatActivity {
                 //Log.d(TAG, "ORDER:"+ OrderModel.getInstance().getMenuItems());
 
                 if (OrderModel.getInstance().getMenuItems().size() > 0) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    PaymentFragment paymentFragment = new PaymentFragment();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.add(R.id.container, paymentFragment, paymentFragment.getTag()).addToBackStack(null).commit();
+                    if(isUserLoggedIn()) {
+                        Intent intent = new Intent(MenuViewPagerActivity.this, SignInActivity2.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MenuViewPagerActivity.this, SignInActivity.class);
+                        startActivity(intent);
+                    }
+
                 } else {
-                    Snackbar.make(view, "Used to add item to Cart", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "Please Add Item(s) in Cart.", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
                 }
             }
         });
+    }
+
+    private boolean isUserLoggedIn() {
+        //ToDo: write code to check user is logged in or not
+        return false;
     }
 
     public void initNavigationDrawer() {

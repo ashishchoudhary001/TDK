@@ -19,15 +19,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/main_image"
+            <FrameLayout
+                android:id="@+id/main_image_layout"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
-                android:src="@drawable/app_icon"
-                android:tag="image_tag"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp" />
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:id="@+id/main_image"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:src="@drawable/app_icon"
+                    android:tag="image_tag"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp" />
+
+                <RelativeLayout
+                    android:id="@+id/item_count_layout"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="invisible"
+                    android:background="@color/greet_color_with_alpha">
+
+                    <TextView
+                        android:id="@+id/item_count_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textSize="50sp"
+                        android:text="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_below="@id/item_count_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textSize="30sp"
+                        android:text="@string/str_added_to_cart"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+
+                </RelativeLayout>
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/contents"
@@ -35,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/main_image"
+                android:layout_below="@id/main_image_layout"
                 android:orientation="horizontal">
 
                 <TextView
@@ -63,7 +102,8 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/app_icon"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"/>
 
                 <TextView
                     android:id="@+id/tv_price"
@@ -85,17 +125,24 @@
                 <Button
                     android:id="@+id/btn_remove"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:visibility="invisible"
-                    android:text="@string/str_remove" />
+                    android:layout_height="48dp"
+                    android:visibility="gone"
+                    android:layout_weight="2"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/remove_button_bg"
+                    android:text="-" />
 
                 <Button
                     android:id="@+id/btn_add"
+                    android:layout_weight="6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/str_add" />
+                    android:text="@string/str_add"
+                    android:textColor="@color/white"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/payment_btn_bg"/>
             </LinearLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
