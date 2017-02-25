@@ -51,6 +51,8 @@ public class SignInActivity extends AppCompatActivity implements
     private EditText mPhoneNumber;
 
     private UserDb mUserDb;
+    private RelativeLayout mLoginFormLayout;
+    private RelativeLayout mLoginButtonLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +61,10 @@ public class SignInActivity extends AppCompatActivity implements
 
         mUserDb = new UserDb(this);
 
-        RelativeLayout mLoginFormLayout = (RelativeLayout) findViewById(R.id.login_form_layout);
-        mLoginFormLayout.setVisibility(View.VISIBLE);
+        mLoginFormLayout = (RelativeLayout) findViewById(R.id.login_form_layout);
+        mLoginFormLayout.setVisibility(View.INVISIBLE);
+
+        mLoginButtonLayout = (RelativeLayout) findViewById(R.id.google_login_button_layout);
 
         mNewUser = new UserRequestModel();
 
@@ -213,6 +217,9 @@ public class SignInActivity extends AppCompatActivity implements
 
     private void updateUI(boolean signedIn) {
         if (signedIn) {
+            mLoginFormLayout.setVisibility(View.VISIBLE);
+            mLoginButtonLayout.setVisibility(View.INVISIBLE);
+
             UserProfileModel userProfileModel = mUserDb.getUserFromDB();
             if(null != userProfileModel) {
                startConfirmActivity(userProfileModel);

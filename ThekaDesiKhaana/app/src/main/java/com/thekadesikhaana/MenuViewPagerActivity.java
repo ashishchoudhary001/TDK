@@ -50,6 +50,7 @@ public class MenuViewPagerActivity extends AppCompatActivity {
     private UserProfileModel mUserProfile;
 
     private RelativeLayout mViewPagerContainer;
+    private MenuFragmentPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +114,6 @@ public class MenuViewPagerActivity extends AppCompatActivity {
     }
 
     private boolean isUserLoggedIn() {
-
-
         return false;
     }
 
@@ -180,6 +179,13 @@ public class MenuViewPagerActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mPagerAdapter != null) {
+            mPagerAdapter.notifyDataSetChanged();
+        }
+    }
 
     private void fetchFoodItemList() {
         APIInterface apiService =
@@ -226,10 +232,10 @@ public class MenuViewPagerActivity extends AppCompatActivity {
     }
 
     private void buildPage(FoodTypeResponseModel responseModel) {
-        MenuFragmentPagerAdapter pagerAdapter = new MenuFragmentPagerAdapter(getSupportFragmentManager(), responseModel);
+        mPagerAdapter = new MenuFragmentPagerAdapter(getSupportFragmentManager(), responseModel);
         mFoodList = responseModel.getFoodType();
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setAdapter(pagerAdapter);
+        viewPager.setAdapter(mPagerAdapter);
     }
 
 }

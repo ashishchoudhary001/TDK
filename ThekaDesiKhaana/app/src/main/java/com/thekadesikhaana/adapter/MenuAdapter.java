@@ -74,16 +74,16 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        TextView menuContent = holder.menuContent;
+        final TextView menuContent = holder.menuContent;
         ImageView menuType = holder.menuType;
         ImageView menuImage = holder.menuImage;
         final TextView priceTextView = holder.menuPrice;
         Button addItemButton = holder.addItemButton;
         final Button removeItemButton = holder.removeItemButton;
 
-        final MenuItems menuItems = dataSet.get(listPosition);
+        final MenuItems menuItems = dataSet.get(position);
 
         Picasso.with(mContext).
                 load(menuItems.getUrlMobile())
@@ -91,44 +91,52 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
                 .resize(900, 900)
                 .into(menuImage);
 
-        if(menuItems.getCuisine().getType().equalsIgnoreCase("v")) {
+        if (menuItems.getCuisine().getType().equalsIgnoreCase("v")) {
             menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.veg_icon));
         } else {
             menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.non_veg_icon));
         }
         menuContent.setText(menuItems.getItems());
-        //int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
+
         String str = "₹ " + Integer.parseInt(menuItems.getPrice());
         priceTextView.setText(str);
 
-        if(holder.selectedItem > 1) {
+        if (holder.selectedItem > 1) {
             removeItemButton.setVisibility(View.VISIBLE);
+        }
+
+        if (menuItems.getCount() > 0) {
+            removeItemButton.setVisibility(View.VISIBLE);
+            holder.itemCountLayout.setVisibility(View.VISIBLE);
+            holder.itemCountTV.setText(String.valueOf(menuItems.getCount()));
         }
 
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.itemCountLayout.setVisibility(View.VISIBLE);
-                holder.selectedItem = holder.selectedItem + 1;
-                Log.d(TAG, "Add item: "+holder.selectedItem);
-                holder.itemCountTV.setText(String.valueOf(holder.selectedItem));
+                Log.d(TAG, "Add item: " + holder.selectedItem);
+                menuItems.setCount(menuItems.getCount() + 1);
+                holder.itemCountTV.setText(String.valueOf(menuItems.getCount()));
                 removeItemButton.setVisibility(View.VISIBLE);
-                OrderModel.getInstance().getMenuItems().add(menuItems);
+
+                OrderModel.getInstance().addOrUpdate(menuItems);
             }
         });
 
         removeItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.selectedItem = holder.selectedItem - 1;
-                Log.d(TAG, "Remove item: "+holder.selectedItem);
-                holder.itemCountTV.setText(String.valueOf(holder.selectedItem));
-                if(holder.selectedItem < 1) {
+
+                menuItems.setCount(menuItems.getCount() - 1);
+                holder.itemCountTV.setText(String.valueOf(menuItems.getCount()));
+
+                if (menuItems.getCount() < 1) {
                     holder.itemCountLayout.setVisibility(View.INVISIBLE);
                     removeItemButton.setVisibility(View.GONE);
                 }
 
-                OrderModel.getInstance().getMenuItems().remove(menuItems);
+                OrderModel.getInstance().addOrUpdate(menuItems);
             }
         });
     }

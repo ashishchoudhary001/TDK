@@ -10,7 +10,7 @@
         android:id="@+id/login_form_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="invisible">
         <include layout="@layout/login_activity" />
 
        <!-- <LinearLayout
@@ -51,7 +51,8 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="200dp"
             android:background="@drawable/login_button_bg"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/google_icon"
