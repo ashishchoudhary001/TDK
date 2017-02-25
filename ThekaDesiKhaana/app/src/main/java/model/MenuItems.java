@@ -20,6 +20,8 @@ public class MenuItems {
 
     private String date;
 
+    private String count;
+
     public String getId() {
         return id;
     }
@@ -76,8 +78,25 @@ public class MenuItems {
         this.date = date;
     }
 
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
+
     @Override
     public String toString() {
-        return "MenuItems [id = " + id + ", price = " + price + ", cuisine = " + cuisine + ", items = " + items + ", urlTablet = " + urlTablet + ", urlMobile = " + urlMobile + ", date = " + date + "]";
+        return "MenuItems{" +
+                "id='" + id + '\'' +
+                ", price='" + price + '\'' +
+                ", cuisine=" + cuisine +
+                ", items='" + items + '\'' +
+                ", urlTablet='" + urlTablet + '\'' +
+                ", urlMobile='" + urlMobile + '\'' +
+                ", date='" + date + '\'' +
+                ", count='" + count + '\'' +
+                '}';
     }
 }

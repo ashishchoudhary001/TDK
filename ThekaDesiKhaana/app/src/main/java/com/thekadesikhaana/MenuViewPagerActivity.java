@@ -6,8 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,9 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thekadesikhaana.adapter.CheckOutActivity;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -102,8 +97,8 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
                 if (OrderModel.getInstance().getMenuItems().size() > 0) {
                     if(isUserLoggedIn()) {
-                        Intent intent = new Intent(MenuViewPagerActivity.this, SignInActivity2.class);
-                        startActivity(intent);
+                        //Intent intent = new Intent(MenuViewPagerActivity.this, SignInActivity2.class);
+                        //startActivity(intent);
                     } else {
                         Intent intent = new Intent(MenuViewPagerActivity.this, SignInActivity.class);
                         startActivity(intent);
@@ -118,7 +113,8 @@ public class MenuViewPagerActivity extends AppCompatActivity {
     }
 
     private boolean isUserLoggedIn() {
-        //ToDo: write code to check user is logged in or not
+
+
         return false;
     }
 

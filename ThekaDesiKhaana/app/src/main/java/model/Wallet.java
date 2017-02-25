@@ -1,10 +1,12 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Created by ParmeshMahore on 2/15/17.
  */
 
-public class Wallet {
+public class Wallet implements Serializable{
 
     private String walletBalance;
 

@@ -101,7 +101,7 @@
                     android:layout_marginEnd="15dp"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/app_icon"
+                    android:src="@drawable/veg_icon"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"/>
 

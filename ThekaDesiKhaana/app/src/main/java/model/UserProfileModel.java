@@ -1,10 +1,13 @@
 package model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by ParmeshMahore on 2/15/17.
  */
 
-public class UserProfileModel {
+public class UserProfileModel implements Parcelable{
 
     private String phone;
 
@@ -23,6 +26,33 @@ public class UserProfileModel {
     private String refereeCode;
 
     private Wallet wallet;
+
+    public UserProfileModel() {
+
+    }
+
+    protected UserProfileModel(Parcel in) {
+        phone = in.readString();
+        email = in.readString();
+        dob = in.readString();
+        referralCode = in.readString();
+        name = in.readString();
+        gender = in.readString();
+        refereeCode = in.readString();
+        wallet = (Wallet) in.readSerializable();
+    }
+
+    public static final Creator<UserProfileModel> CREATOR = new Creator<UserProfileModel>() {
+        @Override
+        public UserProfileModel createFromParcel(Parcel in) {
+            return new UserProfileModel(in);
+        }
+
+        @Override
+        public UserProfileModel[] newArray(int size) {
+            return new UserProfileModel[size];
+        }
+    };
 
     public String getPhone() {
         return phone;
@@ -99,5 +129,22 @@ public class UserProfileModel {
     @Override
     public String toString() {
         return "UserProfileModel [phone = " + phone + ", accessTokens = " + accessTokens + ", email = " + email + ", dob = " + dob + ", referralCode = " + referralCode + ", name = " + name + ", gender = " + gender + ", refereeCode = " + refereeCode + ", wallet = " + wallet + "]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(phone);
+        dest.writeString(email);
+        dest.writeString(dob);
+        dest.writeString(referralCode);
+        dest.writeString(name);
+        dest.writeString(gender);
+        dest.writeString(refereeCode);
+        dest.writeSerializable(wallet);
     }
 }

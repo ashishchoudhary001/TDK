@@ -4,22 +4,33 @@ package com.thekadesikhaana;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.thekadesikhaana.db.UserDb;
+
+import api.APIClient;
+import api.APIInterface;
+import model.UserProfileModel;
+import model.UserRequestModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
@@ -27,27 +38,40 @@ import com.google.android.gms.common.api.Status;
  */
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
+        View.OnClickListener, DatePickerFragment.UpdateDateInterface {
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
+    private GoogleSignInAccount mLoggedInUser;
+    private EditText mDateOfBirthEditText;
+    private UserRequestModel mNewUser;
+    private EditText mPhoneNumber;
+
+    private UserDb mUserDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_activity);
 
+        mUserDb = new UserDb(this);
+
+        RelativeLayout mLoginFormLayout = (RelativeLayout) findViewById(R.id.login_form_layout);
+        mLoginFormLayout.setVisibility(View.VISIBLE);
+
+        mNewUser = new UserRequestModel();
+
+
         // Views
         //mStatusTextView = (TextView) findViewById(R.id.status);
 
         // Button listeners
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
+        //findViewById(R.id.sign_in_button).setOnClickListener(this);
+        //findViewById(R.id.sign_out_button).setOnClickListener(this);
+        //findViewById(R.id.disconnect_button).setOnClickListener(this);
 
         // [START configure_signin]
         // Configure sign-in to request the user's ID, email address, and basic
@@ -68,7 +92,7 @@ public class SignInActivity extends AppCompatActivity implements
 
         // [START customize_button]
         // Set the dimensions of the sign-in button.
-        RelativeLayout signInButton = (RelativeLayout) findViewById(R.id.sign_in_button);
+        RelativeLayout signInButton = (RelativeLayout) findViewById(R.id.google_login_button_layout);
         signInButton.setOnClickListener(this);
         //signInButton.setSize(SignInButton.SIZE_WIDE);
         // [END customize_button]
@@ -118,9 +142,7 @@ public class SignInActivity extends AppCompatActivity implements
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-
-            String detail = acct.getDisplayName() +"\n" +acct.getEmail();
+            mLoggedInUser = result.getSignInAccount();
 
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, detail));
             updateUI(true);
@@ -191,28 +213,98 @@ public class SignInActivity extends AppCompatActivity implements
 
     private void updateUI(boolean signedIn) {
         if (signedIn) {
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+            UserProfileModel userProfileModel = mUserDb.getUserFromDB();
+            if(null != userProfileModel) {
+               startConfirmActivity(userProfileModel);
+            } else {
+                findViewById(R.id.google_login_button_layout).setVisibility(View.GONE);
+                ((AutoCompleteTextView) findViewById(R.id.logged_in_user_name)).setText(mLoggedInUser.getDisplayName());
+                ((AutoCompleteTextView) findViewById(R.id.logged_in_user_email)).setText(mLoggedInUser.getEmail());
+                Log.d(TAG, "USER URL: " + mLoggedInUser.getPhotoUrl());
+                mDateOfBirthEditText = (EditText) findViewById(R.id.edit_text_dob);
+                mPhoneNumber = (EditText) findViewById(R.id.login_ph_number);
+
+                mNewUser.setName(mLoggedInUser.getDisplayName());
+                mNewUser.setEmail(mLoggedInUser.getEmail());
+
+                findViewById(R.id.btn_dob).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DialogFragment newFragment = new DatePickerFragment();
+                        newFragment.show(getSupportFragmentManager(), "datePicker");
+                    }
+                });
+
+                findViewById(R.id.btn_create_user).setOnClickListener(this);
+            }
+
+
         } else {
             //mStatusTextView.setText(R.string.signed_out);
 
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+            findViewById(R.id.google_login_button_layout).setVisibility(View.VISIBLE);
+            //findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
+    }
+
+    private void startConfirmActivity(UserProfileModel userProfileModel) {
+        Intent intent = new Intent(this, ConfirmOrderActivity.class);
+        intent.putExtra("USER", userProfileModel);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.sign_in_button:
+            case R.id.google_login_button_layout:
                 signIn();
                 break;
-            case R.id.sign_out_button:
-                signOut();
+            case R.id.btn_create_user:
+                //signOut();
+                mNewUser.setPhone(mPhoneNumber.getText().toString());
+                mNewUser.setGender("m");
+                createUser(mNewUser);
                 break;
-            case R.id.disconnect_button:
-                revokeAccess();
-                break;
+            //case R.id.disconnect_button:
+                //revokeAccess();
+                //break;
         }
+    }
+
+    private void createUser(UserRequestModel newUser) {
+        APIInterface apiService =
+                APIClient.getClient().create(APIInterface.class);
+
+        Call<UserProfileModel> call = apiService.createUser(newUser);
+        call.enqueue(new Callback<UserProfileModel>() {
+            @Override
+            public void onResponse(Call<UserProfileModel> call, Response<UserProfileModel> response) {
+                Log.d(TAG, "user create: " + response.body());
+                saveUserInformation(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<UserProfileModel> call, Throwable t) {
+                Toast.makeText(SignInActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveUserInformation(UserProfileModel userProfileModel) {
+        if(userProfileModel != null) {
+            mUserDb.saveUserInDB(userProfileModel);
+            startConfirmActivity(userProfileModel);
+        } else {
+            Log.d(TAG, "USER MODEL IS NULL");
+        }
+    }
+
+    @Override
+    public void onDateSelected(String str) {
+        findViewById(R.id.btn_dob).setVisibility(View.INVISIBLE);
+        mDateOfBirthEditText.setVisibility(View.VISIBLE);
+        mDateOfBirthEditText.setText(str);
+        mNewUser.setDob(str);
     }
 }

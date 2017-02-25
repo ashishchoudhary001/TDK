@@ -92,9 +92,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
                 .into(menuImage);
 
         if(menuItems.getCuisine().getType().equalsIgnoreCase("v")) {
-            menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.vegicon));
+            menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.veg_icon));
         } else {
-            menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nonveg_icon));
+            menuType.setImageDrawable(mContext.getResources().getDrawable(R.drawable.non_veg_icon));
         }
         menuContent.setText(menuItems.getItems());
         //int price = getPrice(Integer.parseInt(menuItems.getPrice()), holder, true);
