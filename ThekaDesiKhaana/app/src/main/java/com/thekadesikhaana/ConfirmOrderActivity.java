@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
     private UserProfileModel mUserProfile;
     private HashMap<String, List<MenuItems>> mGroupedMap;
+    private Spinner mAddressSpinner;
 
 
     @Override
@@ -55,11 +57,15 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
         mUserProfile = getIntent().getParcelableExtra(Constant.KEY_USER);
         initViews();
+
+
     }
 
     private void initViews() {
         EditText editText = (EditText) findViewById(R.id.confirm_phone);
         editText.setText(mUserProfile.getPhone());
+
+        mAddressSpinner = (Spinner) findViewById(R.id.address_spinner);
 
         mBengaliVegLayout = (LinearLayout) findViewById(R.id.bengali_veg_order_layout);
         mBengaliNonVegLayout = (LinearLayout) findViewById(R.id.bengali_nonveg_order_layout);

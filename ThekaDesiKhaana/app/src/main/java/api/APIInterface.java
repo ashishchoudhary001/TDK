@@ -20,7 +20,9 @@ public interface APIInterface {
     Call<FoodTypeResponseModel> getMenuList();
 
     @GET("/thekadesi/user/9916620436")
-    Call<UserProfileModel> getUserProfile();
+    Call<UserProfileModel> getUserProfile(
+            @Query("9916620436") String ph
+    );
 
     @Headers("Content-Type: application/json")
     @POST("/thekadesi/user")
@@ -28,5 +30,7 @@ public interface APIInterface {
             @Body UserRequestModel user
             );
 
+    @GET("/thekadesi/user/address/9916620436")
+    Call<UserProfileModel> getUserAddress();
 
 }
