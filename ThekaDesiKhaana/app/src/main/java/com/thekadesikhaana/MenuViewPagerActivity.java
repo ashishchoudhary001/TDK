@@ -1,5 +1,6 @@
 package com.thekadesikhaana;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,7 +27,6 @@ import api.APIInterface;
 import model.FoodType;
 import model.FoodTypeResponseModel;
 import model.OrderModel;
-import model.UserProfileModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,28 +47,28 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
     private TextView tvUserName;
     private TextView tvUserEmailID;
-    private UserProfileModel mUserProfile;
 
-    private RelativeLayout mViewPagerContainer;
+    private ProgressDialog mProgressDialog;
+
     private MenuFragmentPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        setContentView(com.thekadesikhaana.R.layout.activity_main);
+        toolbar = (Toolbar) findViewById(com.thekadesikhaana.R.id.toolbar);
+        drawerLayout = (DrawerLayout) findViewById(com.thekadesikhaana.R.id.drawer);
         setSupportActionBar(toolbar);
         initNavigationDrawer();
 
         //API CALL
         fetchFoodItemList();
 
-        mViewPagerContainer = (RelativeLayout) findViewById(R.id.tabContainer);
+        RelativeLayout mViewPagerContainer = (RelativeLayout) findViewById(com.thekadesikhaana.R.id.tabContainer);
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = (ViewPager) findViewById(com.thekadesikhaana.R.id.viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout = (TabLayout) findViewById(com.thekadesikhaana.R.id.sliding_tabs);
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -88,7 +88,7 @@ public class MenuViewPagerActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(com.thekadesikhaana.R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +119,7 @@ public class MenuViewPagerActivity extends AppCompatActivity {
 
     public void initNavigationDrawer() {
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = (NavigationView) findViewById(com.thekadesikhaana.R.id.navigation_view);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -128,27 +128,27 @@ public class MenuViewPagerActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
 
                 switch (id) {
-                    case R.id.nav_orders:
+                    case com.thekadesikhaana.R.id.nav_orders:
                         Toast.makeText(getApplicationContext(), "My Orders", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
-                    case R.id.nav_account:
+                    case com.thekadesikhaana.R.id.nav_account:
                         Toast.makeText(getApplicationContext(), "My Account", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
-                    case R.id.nav_invite:
+                    case com.thekadesikhaana.R.id.nav_invite:
                         Toast.makeText(getApplicationContext(), "Invite n Earn", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
-                    case R.id.nav_feedback:
+                    case com.thekadesikhaana.R.id.nav_feedback:
                         Toast.makeText(getApplicationContext(), "Feedback", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
-                    case R.id.nav_faqs:
+                    case com.thekadesikhaana.R.id.nav_faqs:
                         Toast.makeText(getApplicationContext(), "FAQs", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
-                    case R.id.nav_logout:
+                    case com.thekadesikhaana.R.id.nav_logout:
                         drawerLayout.closeDrawers();
                         finish();
 
@@ -157,13 +157,13 @@ public class MenuViewPagerActivity extends AppCompatActivity {
             }
         });
         View header = navigationView.getHeaderView(0);
-        tvUserName = (TextView) header.findViewById(R.id.tv_username);
-        tvUserEmailID = (TextView) header.findViewById(R.id.tv_email_id);
+        tvUserName = (TextView) header.findViewById(com.thekadesikhaana.R.id.tv_username);
+        tvUserEmailID = (TextView) header.findViewById(com.thekadesikhaana.R.id.tv_email_id);
 
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout) findViewById(com.thekadesikhaana.R.id.drawer);
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, com.thekadesikhaana.R.string.drawer_open, com.thekadesikhaana.R.string.drawer_close) {
 
             @Override
             public void onDrawerClosed(View v) {
@@ -190,6 +190,7 @@ public class MenuViewPagerActivity extends AppCompatActivity {
     private void fetchFoodItemList() {
         APIInterface apiService =
                 APIClient.getClient().create(APIInterface.class);
+        showProgressDialog();
 
         Call<FoodTypeResponseModel> call = apiService.getMenuList();
         call.enqueue(new Callback<FoodTypeResponseModel>() {
@@ -197,10 +198,12 @@ public class MenuViewPagerActivity extends AppCompatActivity {
             public void onResponse(Call<FoodTypeResponseModel> call, Response<FoodTypeResponseModel> response) {
                 Log.d(TAG, "" + response.body());
                 buildPage(response.body());
+                hideProgessDialog();
             }
 
             @Override
             public void onFailure(Call<FoodTypeResponseModel> call, Throwable t) {
+                hideProgessDialog();
                 Toast.makeText(MenuViewPagerActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -210,7 +213,7 @@ public class MenuViewPagerActivity extends AppCompatActivity {
         APIInterface apiService =
                 APIClient.getClient().create(APIInterface.class);
 
-        Call<UserProfileModel> call = apiService.getUserProfile();
+        /*Call<UserProfileModel> call = apiService.getUserProfile(getPhoneNumber());
         call.enqueue(new Callback<UserProfileModel>() {
             @Override
             public void onResponse(Call<UserProfileModel> call, Response<UserProfileModel> response) {
@@ -222,14 +225,14 @@ public class MenuViewPagerActivity extends AppCompatActivity {
             public void onFailure(Call<UserProfileModel> call, Throwable t) {
                 Toast.makeText(MenuViewPagerActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
-    private void updateUserProfile(UserProfileModel body) {
-        mUserProfile = body;
+    /*private void updateUserProfile(UserProfileModel body) {
+        UserProfileModel mUserProfile = body;
         tvUserEmailID.setText(mUserProfile.getEmail());
         tvUserName.setText(mUserProfile.getName());
-    }
+    }*/
 
     private void buildPage(FoodTypeResponseModel responseModel) {
         mPagerAdapter = new MenuFragmentPagerAdapter(getSupportFragmentManager(), responseModel);
@@ -238,4 +241,25 @@ public class MenuViewPagerActivity extends AppCompatActivity {
         viewPager.setAdapter(mPagerAdapter);
     }
 
+   /* private void checkPermission() {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.READ_PHONE_STATE}, 1001);
+            }
+        }
+    }*/
+
+   private void showProgressDialog() {
+       mProgressDialog = new ProgressDialog(this);
+       mProgressDialog.setMessage("Please wait...");
+       mProgressDialog.show();
+   }
+
+   private void hideProgessDialog(){
+       if(mProgressDialog != null) {
+           mProgressDialog.dismiss();
+       }
+   }
 }

@@ -5,6 +5,9 @@ package com.thekadesikhaana;
  */
 
 public class Constant {
+    static final String KEY_ADDRESS = "KEY_ADDRESS";
+    static final String KEY_ADDRESS_BUNDLE = "KEY_ADDRESS_BUNDLE";
+
     public static String KEY_BENGALI_VEG_LIST = "veg_bengali";
     public static String KEY_BENGALI_NONVEG_LIST = "nonveg_bengali";
     public static String KEY_NORTH_VEG_INDIAN_LIST = "veg_northindian";

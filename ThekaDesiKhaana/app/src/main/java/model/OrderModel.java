@@ -3,7 +3,6 @@ package model;
 import android.util.Log;
 
 import com.thekadesikhaana.Constant;
-import com.thekadesikhaana.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

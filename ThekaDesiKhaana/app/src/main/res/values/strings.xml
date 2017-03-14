@@ -104,4 +104,15 @@
     <string name="item_veg">Veg</string>
     <string name="item_non_veg">Non Veg</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_change">Change</string>
+    <string name="str_select_address">Select Address</string>
+    <string name="str_add_address">Add Address</string>
+    <string name="str_pincode">Pincode</string>
+    <string name="str_address_line2">Address Line 2</string>
+    <string name="str_address_line1">Address Line 1</string>
+    <string name="str_landmark">Landmark</string>
+    <string name="str_submit">Submit</string>
+
 </resources>

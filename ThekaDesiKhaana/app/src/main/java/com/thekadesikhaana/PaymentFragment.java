@@ -22,8 +22,8 @@ public class PaymentFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.payment_layout, container, false);
-        TextView tvTotalAmount = (TextView) view.findViewById(R.id.et_total_amount);
+        View view = inflater.inflate(com.thekadesikhaana.R.layout.payment_layout, container, false);
+        TextView tvTotalAmount = (TextView) view.findViewById(com.thekadesikhaana.R.id.et_total_amount);
         tvTotalAmount.setText(getTotalAmount());
         return view;
     }

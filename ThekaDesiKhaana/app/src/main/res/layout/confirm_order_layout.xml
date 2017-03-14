@@ -2,16 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_bg">
+    android:background="@color/dark_bg"
+    android:paddingTop="5dp"
+    android:id="@+id/confirm_order_container">
 
-    <Spinner
-        android:id="@+id/address_spinner"
+    <Button
+        android:id="@+id/changeAdd"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_change"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_toLeftOf="@id/changeAdd"
+        android:id="@+id/selectedAddressTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:textColor="@color/white"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/select_address_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_select_address" />
 
     <android.support.design.widget.TextInputLayout
-        android:layout_below="@id/address_spinner"
+        android:layout_below="@id/select_address_btn"
+        android:layout_marginTop="5dp"
         android:id="@+id/confirm_ph_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,6 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:onClick="onClick"
             android:background="@drawable/payment_btn_bg"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>

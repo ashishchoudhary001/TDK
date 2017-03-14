@@ -14,11 +14,8 @@ import android.view.ViewGroup;
 
 import com.thekadesikhaana.adapter.MenuAdapter;
 
-import java.util.List;
-
 import model.Bengali;
 import model.IFoodType;
-import model.MenuItems;
 import model.NorthIndian;
 import model.Odia;
 import model.Punjabi;
@@ -51,9 +48,9 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
+        View view = inflater.inflate(com.thekadesikhaana.R.layout.fragment_menu, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.menu_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(com.thekadesikhaana.R.id.menu_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);

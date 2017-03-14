@@ -57,14 +57,14 @@ public class SignInActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signin_activity);
+        setContentView(com.thekadesikhaana.R.layout.signin_activity);
 
         mUserDb = new UserDb(this);
 
-        mLoginFormLayout = (RelativeLayout) findViewById(R.id.login_form_layout);
+        mLoginFormLayout = (RelativeLayout) findViewById(com.thekadesikhaana.R.id.login_form_layout);
         mLoginFormLayout.setVisibility(View.INVISIBLE);
 
-        mLoginButtonLayout = (RelativeLayout) findViewById(R.id.google_login_button_layout);
+        mLoginButtonLayout = (RelativeLayout) findViewById(com.thekadesikhaana.R.id.google_login_button_layout);
 
         mNewUser = new UserRequestModel();
 
@@ -96,7 +96,7 @@ public class SignInActivity extends AppCompatActivity implements
 
         // [START customize_button]
         // Set the dimensions of the sign-in button.
-        RelativeLayout signInButton = (RelativeLayout) findViewById(R.id.google_login_button_layout);
+        RelativeLayout signInButton = (RelativeLayout) findViewById(com.thekadesikhaana.R.id.google_login_button_layout);
         signInButton.setOnClickListener(this);
         //signInButton.setSize(SignInButton.SIZE_WIDE);
         // [END customize_button]
@@ -202,7 +202,7 @@ public class SignInActivity extends AppCompatActivity implements
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setMessage(getString(com.thekadesikhaana.R.string.loading));
             mProgressDialog.setIndeterminate(true);
         }
 
@@ -224,17 +224,17 @@ public class SignInActivity extends AppCompatActivity implements
             if(null != userProfileModel) {
                startConfirmActivity(userProfileModel);
             } else {
-                findViewById(R.id.google_login_button_layout).setVisibility(View.GONE);
-                ((AutoCompleteTextView) findViewById(R.id.logged_in_user_name)).setText(mLoggedInUser.getDisplayName());
-                ((AutoCompleteTextView) findViewById(R.id.logged_in_user_email)).setText(mLoggedInUser.getEmail());
+                findViewById(com.thekadesikhaana.R.id.google_login_button_layout).setVisibility(View.GONE);
+                ((AutoCompleteTextView) findViewById(com.thekadesikhaana.R.id.logged_in_user_name)).setText(mLoggedInUser.getDisplayName());
+                ((AutoCompleteTextView) findViewById(com.thekadesikhaana.R.id.logged_in_user_email)).setText(mLoggedInUser.getEmail());
                 Log.d(TAG, "USER URL: " + mLoggedInUser.getPhotoUrl());
-                mDateOfBirthEditText = (EditText) findViewById(R.id.edit_text_dob);
-                mPhoneNumber = (EditText) findViewById(R.id.login_ph_number);
+                mDateOfBirthEditText = (EditText) findViewById(com.thekadesikhaana.R.id.edit_text_dob);
+                mPhoneNumber = (EditText) findViewById(com.thekadesikhaana.R.id.login_ph_number);
 
                 mNewUser.setName(mLoggedInUser.getDisplayName());
                 mNewUser.setEmail(mLoggedInUser.getEmail());
 
-                findViewById(R.id.btn_dob).setOnClickListener(new View.OnClickListener() {
+                findViewById(com.thekadesikhaana.R.id.btn_dob).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         DialogFragment newFragment = new DatePickerFragment();
@@ -242,21 +242,21 @@ public class SignInActivity extends AppCompatActivity implements
                     }
                 });
 
-                findViewById(R.id.btn_create_user).setOnClickListener(this);
+                findViewById(com.thekadesikhaana.R.id.btn_create_user).setOnClickListener(this);
             }
 
 
         } else {
             //mStatusTextView.setText(R.string.signed_out);
 
-            findViewById(R.id.google_login_button_layout).setVisibility(View.VISIBLE);
+            findViewById(com.thekadesikhaana.R.id.google_login_button_layout).setVisibility(View.VISIBLE);
             //findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
 
     private void startConfirmActivity(UserProfileModel userProfileModel) {
         Intent intent = new Intent(this, ConfirmOrderActivity.class);
-        intent.putExtra("USER", userProfileModel);
+        intent.putExtra(Constant.KEY_USER, userProfileModel);
         startActivity(intent);
         finish();
     }
@@ -264,10 +264,10 @@ public class SignInActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.google_login_button_layout:
+            case com.thekadesikhaana.R.id.google_login_button_layout:
                 signIn();
                 break;
-            case R.id.btn_create_user:
+            case com.thekadesikhaana.R.id.btn_create_user:
                 //signOut();
                 mNewUser.setPhone(mPhoneNumber.getText().toString());
                 mNewUser.setGender("m");
@@ -309,7 +309,7 @@ public class SignInActivity extends AppCompatActivity implements
 
     @Override
     public void onDateSelected(String str) {
-        findViewById(R.id.btn_dob).setVisibility(View.INVISIBLE);
+        findViewById(com.thekadesikhaana.R.id.btn_dob).setVisibility(View.INVISIBLE);
         mDateOfBirthEditText.setVisibility(View.VISIBLE);
         mDateOfBirthEditText.setText(str);
         mNewUser.setDob(str);

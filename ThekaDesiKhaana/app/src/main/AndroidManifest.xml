@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".SignInActivity" />
         <activity android:name=".ConfirmOrderActivity" />
+        <activity android:name=".AddressListActivity" />
+        <activity android:name=".NewAddressActivity" />
     </application>
 
 </manifest>
