@@ -1,5 +1,6 @@
 package com.thekadesikhaana;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -36,6 +37,8 @@ public class AddressListActivity extends AppCompatActivity implements AdapterVie
     private List<AddressData> mAddressList;
     private Button mAddAddressButton;
     private UserProfileModel mUserProfile;
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +69,9 @@ public class AddressListActivity extends AppCompatActivity implements AdapterVie
     @Override
     protected void onResume() {
         super.onResume();
+        showProgressDialog();
         fetchAddressList(mUserProfile.getPhone());
+
     }
 
     private void fetchAddressList(String phoneNumber) {
@@ -79,17 +84,16 @@ public class AddressListActivity extends AppCompatActivity implements AdapterVie
             public void onResponse(Call<AddressResponseModel> call, Response<AddressResponseModel> response) {
                 Log.d(TAG, "" + response.body());
                 mAddressList = response.body().getData();
+                hideProgessDialog();
                 if(mAddressList.size() > 0) {
                     mAddressListAdapter.setData(mAddressList);
-                    mAddAddressButton.setVisibility(View.INVISIBLE);
-                } else {
-                    mAddAddressButton.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<AddressResponseModel> call, Throwable t) {
                 Toast.makeText(AddressListActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
+                hideProgessDialog();
             }
         });
     }
@@ -105,10 +109,25 @@ public class AddressListActivity extends AppCompatActivity implements AdapterVie
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString(Constant.KEY_ADDRESS, address);
+        bundle.putString(Constant.KEY_ADDRESS_ID, data.getAddressId());
 
         intent.putExtra(Constant.KEY_ADDRESS_BUNDLE, bundle);
+
 
         setResult(1022, intent);
         finish();
     }
+
+    private void showProgressDialog() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Please wait...");
+        mProgressDialog.show();
+    }
+
+    private void hideProgessDialog(){
+        if(mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+    }
+
 }

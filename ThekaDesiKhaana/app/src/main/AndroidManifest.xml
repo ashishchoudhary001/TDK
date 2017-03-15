@@ -31,10 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignInActivity" />
-        <activity android:name=".ConfirmOrderActivity" />
-        <activity android:name=".AddressListActivity" />
-        <activity android:name=".NewAddressActivity" />
+        <activity android:name=".SignInActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ConfirmOrderActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddressListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NewAddressActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".OrderSummeryActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

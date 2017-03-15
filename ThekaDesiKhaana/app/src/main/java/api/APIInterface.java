@@ -3,7 +3,11 @@ package api;
 
 import model.AddressData;
 import model.AddressResponseModel;
+import model.ConfirmOrderResponseModel;
+import model.CreateOrderRequestModel;
 import model.FoodTypeResponseModel;
+import model.NewAddressRequestModel;
+import model.OrderDetailModel;
 import model.UserAddressResponseModel;
 import model.UserProfileModel;
 import model.UserRequestModel;
@@ -31,33 +35,25 @@ public interface APIInterface {
     @POST("/thekadesi/user")
     Call<UserProfileModel> createUser(
             @Body UserRequestModel user
-            );
+    );
 
     @GET("/thekadesi/user/address/")
     Call<AddressResponseModel> getUserAddress(
             @Query("userId") String phoneNumber
     );
 
-    /*@Headers("Content-Type: application/json")
-    @POST("/thekadesi/user/address")
-    Call<AddressData> createAddress(@Query("userId") String userId,
-                                    @Query("addressId") String addressId,
-                                    @Query("addressLine1") String addressLine1,
-                                    @Query("addressLine2") String addressLine2,
-                                    @Query("pinCode") String pinCode,
-                                    @Query("landmark") String landmark,
-                                    @Query("name") String name,
-                                    @Query("mobileNumber") String mobileNumber);
-*/
     @Headers("Content-Type: application/json")
     @POST("/thekadesi/user/address")
-    Call<AddressData> createAddress(@Body AddressData addressData);
+    Call<NewAddressRequestModel> createAddress(@Body NewAddressRequestModel addressData);
 
-    /*@POST("/services/oauth2/token")
-    Call<LoginResponseModel> postAdminLoginRequest(
-            @Query("grant_type") String response,
-            @Query("client_id") String client_id,
-            @Query("client_secret") String client_secret,
-            @Query("username") String username,
-            @Query("password") String password);*/
+    @Headers("Content-Type: application/json")
+    @POST("/thekadesi/order")
+    Call<ConfirmOrderResponseModel> createOrder(@Body CreateOrderRequestModel createOrder);
+
+
+    @GET("/thekadesi/order/")
+    Call<OrderDetailModel> getOrderSummery(
+            @Query("orderId") String orderId
+    );
+
 }

@@ -1,5 +1,6 @@
 package com.thekadesikhaana;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import api.APIClient;
 import api.APIInterface;
 import model.AddressData;
 import model.AddressResponseModel;
+import model.NewAddressRequestModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +39,7 @@ public class NewAddressActivity extends AppCompatActivity {
     private EditText mPinCode;
     private EditText mLandMark;
     private Button mCreateAddressButton;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class NewAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "SPINNER ITEM: "+ list.get(mAddressTypeSpinner.getSelectedItemPosition()));
-                AddressData addressData = new AddressData();
+                NewAddressRequestModel addressData = new NewAddressRequestModel();
                 addressData.setUserId(mPhoneNumber.getText().toString());
                 addressData.setName(list.get(mAddressTypeSpinner.getSelectedItemPosition()));
                 addressData.setAddressLine1(mAddressLine1.getText().toString());
@@ -78,27 +81,24 @@ public class NewAddressActivity extends AppCompatActivity {
         });
     }
 
-    private void createAddress(AddressData addressData) {
+    private void createAddress(NewAddressRequestModel addressData) {
         APIInterface apiService =
                 APIClient.getClient().create(APIInterface.class);
 
-        /*Call<AddressData> call = apiService.createAddress(addressData.getUserId(), addressData.getAddressId(),
-                addressData.getAddressLine1(), addressData.getAddressLine2(), addressData.getPinCode(),
-                addressData.getLandmark(), addressData.getName(), addressData.getMobileNumber());*/
-
-        Call<AddressData> call = apiService.createAddress(addressData);
-        call.enqueue(new Callback<AddressData>() {
+        Call<NewAddressRequestModel> call = apiService.createAddress(addressData);
+        call.enqueue(new Callback<NewAddressRequestModel>() {
             @Override
-            public void onResponse(Call<AddressData> call, Response<AddressData> response) {
-                Log.d(TAG, "" + response.body());
+            public void onResponse(Call<NewAddressRequestModel> call, Response<NewAddressRequestModel> response) {
                 finish();
             }
 
             @Override
-            public void onFailure(Call<AddressData> call, Throwable t) {
+            public void onFailure(Call<NewAddressRequestModel> call, Throwable t) {
                 Toast.makeText(NewAddressActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "" + t.toString());
             }
         });
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.thekadesikhaana;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,12 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import api.APIClient;
+import api.APIInterface;
+import model.AddressResponseModel;
+import model.ConfirmOrderResponseModel;
+import model.CreateOrderRequestModel;
 import model.MenuItems;
+import model.OrderMenuItemModel;
 import model.OrderModel;
 import model.UserProfileModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by ParmeshMahore on 2/23/17.
@@ -55,21 +66,26 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
     private HashMap<String, List<MenuItems>> mGroupedMap;
     private Button mSelectAddressButton;
 
+    private List<OrderMenuItemModel> mOrderList;
+    private String mAddressId;
+    private EditText mPhoneNumberEditText;
+
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(com.thekadesikhaana.R.layout.confirm_order_layout);
 
-        //getSupportActionBar().setHomeButtonEnabled(true);
-
         mUserProfile = getIntent().getParcelableExtra(Constant.KEY_USER);
+        mOrderList = new ArrayList<>();
         initViews();
     }
 
     private void initViews() {
-        EditText editText = (EditText) findViewById(com.thekadesikhaana.R.id.confirm_phone);
-        editText.setText(mUserProfile.getPhone());
+        mPhoneNumberEditText = (EditText) findViewById(com.thekadesikhaana.R.id.confirm_phone);
+        mPhoneNumberEditText.setText(mUserProfile.getPhone());
 
         mSelectAddressButton = (Button) findViewById(com.thekadesikhaana.R.id.select_address_btn);
         mSelectAddressButton.setOnClickListener(this);
@@ -273,12 +289,62 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
                 showAddressListFragment();
                 break;
             case com.thekadesikhaana.R.id.button_confirm_order:
-                Toast.makeText(ConfirmOrderActivity.this, "Work in Progress", Toast.LENGTH_LONG).show();
+
+                for (List<MenuItems> list : mGroupedMap.values()) {
+                    printMenuItems(list);
+                    OrderMenuItemModel model = new OrderMenuItemModel();
+                    model.setMenuItem(list.get(0).getId());
+                    model.setQuantity(String.valueOf(list.get(0).getCount()));
+                    mOrderList.add(model);
+                }
+
+                CreateOrderRequestModel createOrderRequestModel = new CreateOrderRequestModel();
+                createOrderRequestModel.setAddressId(mAddressId);
+                createOrderRequestModel.setUserId(mPhoneNumberEditText.getText().toString());
+                createOrderRequestModel.setMenuItems(mOrderList);
+                createOrderRequestModel.setIsCOD("t");
+                createOrderRequestModel.setWalletCashCut("0");
+                createOrderRequestModel.setPromotionalWalletCut("0");
+
+                confirmOrder(createOrderRequestModel);
+
                 break;
             default:
                 Log.d(TAG, "WRONG CASE");
                 break;
         }
+    }
+
+    private void confirmOrder(CreateOrderRequestModel createOrderRequestModel) {
+        APIInterface apiService =
+                APIClient.getClient().create(APIInterface.class);
+
+        showProgressDialog();
+
+        Call<ConfirmOrderResponseModel> call = apiService.createOrder(createOrderRequestModel);
+        call.enqueue(new Callback<ConfirmOrderResponseModel>() {
+            @Override
+            public void onResponse(Call<ConfirmOrderResponseModel> call, Response<ConfirmOrderResponseModel> response) {
+                Log.d(TAG, "confirmOrder:" + response.body());
+                hideProgessDialog();
+                startOrderSummeryActivity(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ConfirmOrderResponseModel> call, Throwable t) {
+                Toast.makeText(ConfirmOrderActivity.this, "Network Error, Please Try Again!", Toast.LENGTH_SHORT).show();
+                hideProgessDialog();
+            }
+        });
+    }
+
+    private void startOrderSummeryActivity(ConfirmOrderResponseModel body) {
+        Intent intent = new Intent(ConfirmOrderActivity.this, OrderSummeryActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.KEY_ORDER_ID, body.getOrderId());
+        intent.putExtra(Constant.KEY_ORDER_BUNDLE, bundle);
+
+        startActivity(intent);
     }
 
     private void showAddressListFragment() {
@@ -313,6 +379,7 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
         if(resultCode == 1022) {
             Bundle bundle = data.getBundleExtra(Constant.KEY_ADDRESS_BUNDLE);
             String address = bundle.getString(Constant.KEY_ADDRESS);
+            mAddressId = bundle.getString(Constant.KEY_ADDRESS_ID);
             Log.d(TAG, "ADDRESS: "+address);
             mSelectedAddress.setVisibility(View.VISIBLE);
             mSelectedAddress.setText(address);
@@ -321,6 +388,18 @@ public class ConfirmOrderActivity extends AppCompatActivity implements View.OnCl
             mSelectAddressButton.setVisibility(View.INVISIBLE);
         } else {
             Log.d(TAG, "ADDRESS not selected");
+        }
+    }
+
+    private void showProgressDialog() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Please wait...");
+        mProgressDialog.show();
+    }
+
+    private void hideProgessDialog(){
+        if(mProgressDialog != null) {
+            mProgressDialog.dismiss();
         }
     }
 }
